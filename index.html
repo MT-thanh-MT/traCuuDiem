@@ -1,0 +1,123 @@
+<!DOCTYPE HTML
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Trang thông tin kỳ thi quốc gia 2023 - KỲ THI TỐT NGHIỆP THPT NĂM 2023</title>
+    <link rel="stylesheet" href="css/style.css" media="screen" type="text/css" />
+    <link rel="stylesheet" href="css/frame.css" media="screen" type="text/css" />
+    <script type="text/javascript" src="/Content/Custom/js/jquery.min.js"></script>
+</head>
+
+<body>
+    <!--//--Header----------------->
+    <div class="top-main">
+        <div class="wrap">
+            <div class="logo">
+
+                <h1>
+                    <a href="#" title="KỲ THI TỐT NGHIỆP THPT  NĂM 2023">
+                        KỲ THI TỐT NGHIỆP THPT NĂM 2023<br />
+                        <span>HỘI ĐỒNG THI SỞ GIÁO DỤC VÀ ĐÀO TẠO SƠN LA</span>
+                    </a>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <!--//--Main content----------------->
+    <div class="wrap">
+        <div class="q-info">
+            <p></p>
+        </div>
+    </div>
+    <div class="content-main">
+        <form id="SearchTSForm" method="post">
+            <div class="form-reg">
+
+                <ul class="q-list">
+                    <li>
+                        <h3 style="text-transform:uppercase;font-weight:bold;text-align:center;">KỲ THI TỐT NGHIỆP THPT
+                            NĂM 2023</h3>
+                    </li>
+                    <li>
+                        <h2 style="text-align:center;">TRA CỨU ĐIỂM THI TỐT NGHIỆP THPT NĂM 2023</h2>
+                    </li>
+                </ul>
+                <form >
+                    <div>
+                        <label>Số báo danh: </label>
+                        <input type="text">
+                    </div>
+                    <div>
+                        <label>Mã xác nhận: </label>
+                        <input type="text">
+                    </div>
+                    <button>Tra cứu</button>
+                </form>
+                <p>Điểm các môn:</p>
+                <p><strong>Toán: 8.80  Ngữ Văn: 8.90  Vật Lý: 9.05</strong></p>
+            </div>
+        </form>
+    </div>
+    <!--//--Footer----------------->
+    <div class="footer-main">
+        <div class="wrap">
+            <p>
+                KỲ THI TỐT NGHIỆP THPT NĂM 2023
+            </p>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $("#refreshCaptcha").click(function () {
+            $("#ImgCaptcha").attr("src", "/TraCuu/GetCaptcha?time=" + new Date().getTime() + "&choose=1");
+        });
+
+        $(document).ready(function () {
+            $("#ImgCaptcha").attr("src", "/TraCuu/GetCaptcha?time=" + new Date().getTime() + "&choose=1");
+
+            $(window).resize(function () {
+                $(".content-main").css({ "min-height": $(window).height() - $(".top-main").height() - $(".footer-main").height() - 65 });
+            });
+            $(".content-main").css({ "min-height": $(window).height() - $(".top-main").height() - $(".footer-main").height() - 65 });
+
+        });
+
+        function dosubmit() {
+            $("#btnsubmit").attr("disabled", "disabled");
+            $("#err-msg").html("Đang tra cứu...");
+            $.ajax({
+                url: '/TraCuu/TraCuu',
+                type: 'POST',
+                data: $("#SearchTSForm").serialize(),
+                error: function (data) {
+                    $("#btnsubmit").removeAttr("disabled");
+                    $("#err-msg").html(data);
+                    $(".hd").hide();
+                    $("#ImgCaptcha").attr("src", "/TraCuu/GetCaptcha?time=" + new Date().getTime() + "&choose=1");
+                },
+                success: function (data) {
+                    $("#btnsubmit").removeAttr("disabled");
+                    if (data.Message != null) {
+                        $("#err-msg").html(data.Message);
+                        $(".hd").hide();
+                    } else {
+                        //$("#ts-name").html(data.HO_TEN);
+                        //$("#ts-sbd").html(data.SOBAODANH);
+                        $("#ts-mark").html(data.DIEM_THI.replace(/ /g, "&nbsp;"));
+                        //$("#imgResult").attr("src", data);
+                        if (data.DIEM_THI.indexOf('*') >= 0) {
+
+                        }
+                        $(".hd").show();
+                        $("#err-msg").html("");
+                    }
+                    $("#ImgCaptcha").attr("src", "/TraCuu/GetCaptcha?time=" + new Date().getTime() + "&choose=1");
+                }
+            });
+        }
+    </script>
+
+</body>
+
+</html>
